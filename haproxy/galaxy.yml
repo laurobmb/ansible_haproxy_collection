@@ -1,0 +1,21 @@
+namespace: laurobmb
+name: haproxy
+version: 1.0.5
+readme: README.md
+authors:
+- Lauro Gomes <lagomes@redhat.com>
+description: Example of test module
+license:
+- GPL-2.0-or-later
+license_file: ''
+tags: []
+dependencies: {}
+repository: https://github.com/laurobmb/ansible_hello_collection
+documentation: https://github.com/laurobmb/ansible_hello_collection/docs/
+homepage: https://github.com/laurobmb
+issues: https://github.com/laurobmb/ansible_hello_collection/issues
+build_ignore:
+- '*.pyc'
+- galaxy.yml
+- playbooks/sensitive
+- '*.tar.gz'

@@ -1,0 +1,23 @@
+global_defs {
+	lvs_id {{ansible_hostname}}
+}
+
+# Script used to check if HAProxy is running
+vrrp_script check_haproxy {
+	script "pidof haproxy"
+	interval 2
+	weight 2
+}
+
+vrrp_instance VI_01 {
+	state MASTER
+	interface {{ansible_default_ipv4.interface}}
+	virtual_router_id 51
+	priority 100
+	virtual_ipaddress {
+		{{ keepalived_virtualip }}
+	}
+	track_script {
+		check_haproxy
+	}
+}

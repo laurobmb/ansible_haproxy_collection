@@ -1,0 +1,48 @@
+---
+# tasks file for haproxy
+- name: install haproxy
+  ansible.builtin.yum:
+    name: haproxy
+    state: present
+  notify: restart haproxy
+
+- name: copy haproxy.cfg
+  ansible.builtin.template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+  notify: restart haproxy
+
+- name: Allow firewalld
+  ansible.posix.firewalld:
+    service: "{{item}}"
+    permanent: yes
+    state: enabled
+    zone: public
+    immediate: yes
+  loop:
+  - https
+  - http
+
+- name: Allow firewalld to stats
+  ansible.posix.firewalld:
+    port: 9000/tcp
+    permanent: yes
+    state: enabled
+    zone: public
+    immediate: yes
+
+- name: Adicionar porta TCPs
+  community.general.seport:
+    ports: "{{ item }}"
+    proto: tcp
+    setype: http_port_t
+    state: present
+  loop:
+    - 6443
+    - 22623
+
+- name: restart haproxy and ensure enable
+  ansible.builtin.systemd:
+    name: haproxy
+    state: restarted
+    enabled: true
